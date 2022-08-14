@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home Page</title>
+  <link rel="stylesheet" href="index.css" />
+</head>
+
+<body>
+  <div id="links">
+    <div><a href="index.html">Home</a></div>
+    <div><a href="applied.html">Applied Jobs</a></div>
+    <div><a href="bookmark.html">Bookmarks</a></div>
+  </div>
+  <form action="" id="form">
+    <h2>Enter Your Application Details</h2>
+    <input placeholder="Enter Name" id="name" name="name" type="text" />
+    <input placeholder="Enter email" type="email" name="email" id="email" />
+    <select name="role" id="role">
+      <option value="FSD">FSD</option>
+      <option value="Backend">Backend</option>
+      <option value="Frontend">Frontend</option>
+    </select>
+    <input id="salary" type="number" placeholder="Enter expected salary in lakhs per annum " />
+    <input id="submit" type="submit" name="submit" value="Submit" />
+  </form>
+</body>
+<script>
+  //you need to code here
+  document.querySelector("form").addEventListener("submit", addApplication);
+
+  var applied = JSON.parse(localStorage.getItem("jobList")) || [];
+  function addApplication(event) {
+    event.preventDefault();
+    var empName = document.getElementById("name");
+    var empEmail = document.getElementById("email");
+    var empRole = document.getElementById("role");
+    var empSalary = document.getElementById("salary");
+
+    var empObj = {
+      name: empName.value,
+      email: empEmail.value,
+      role: empRole.value,
+      salary: empSalary.value
+    }
+    applied.push(empObj);
+
+    localStorage.setItem("jobList", JSON.stringify(applied));
+
+    empName.value = "";
+    empEmail.value = "";
+    empSalary.value = "";
+  }
+
+</script>
+
+</html>

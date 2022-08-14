@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Database</title>
+  <link rel="stylesheet" href="commonStyles.css" />
+</head>
+
+<body>
+  <div id="links">
+    <div><a href="index.html">Home</a></div>
+    <div><a href="applied.html">Applied Jobs</a></div>
+    <div><a href="bookmark.html">Bookmarks</a></div>
+  </div>
+  <div id="sortFun">
+    <select name="" id="sortByName" onchange="sortFunByName()">
+      <option value="">Sort by names</option>
+      <option value="asc">Ascending</option>
+      <option value="dec">Descending</option>
+    </select>
+    <select name="" id="sortBySalary" onchange="sortFunBySalary()">
+      <option value="">Sort by Salary</option>
+      <option value="hToL">High to Low</option>
+      <option value="lToH">Low to High</option>
+    </select>
+    <select name="" id="sortByRole" onchange="sortFunByRole()">
+      <option value="all">All Category</option>
+      <option value="FSD">FSD</option>
+      <option value="Backend">Backend</option>
+      <option value="Frontend">Frontend</option>
+    </select>
+  </div>
+  <main>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Job applied</th>
+          <th>Salary expected</th>
+          <th>Add to bookmark</th>
+        </tr>
+      </thead>
+      <tbody id="body">
+        <!-- Append your output to tbody -->
+      </tbody>
+    </table>
+  </main>
+</body>
+<script>
+  //you need to code here
+// Get Data from Local Storage
+  var applied = JSON.parse(localStorage.getItem("jobList")) || [];
+  // Print Data
+  addEmpDataTable(applied)
+  function addEmpDataTable(applied) {
+    document.getElementById("body").innerText = "";
+    applied.map(function (ele) {
+      var tr = document.createElement("tr");
+
+      var td1 = document.createElement("td");
+      td1.innerText = ele.name;
+      var td2 = document.createElement("td");
+      td2.innerText = ele.email;
+      var td3 = document.createElement("td");
+      td3.innerText = ele.role;
+      var td4 = document.createElement("td");
+      td4.innerText = ele.salary;
+      var td5 = document.createElement("td");
+      td5.innerText = "Bookmarks";
+      td5.style.color = "green"
+      td5.style.cursor = "pointer"
+      td5.addEventListener("click", function () {
+        addEmpInBookmark(ele)
+      })
+      tr.append(td1, td2, td3, td4, td5);
+      document.getElementById("body").append(tr);
+    })
+  }
+
+
+  //  Add Bookmarks Data
+  var bookmarkArr = JSON.parse(localStorage.getItem("bookmarks")) || [];
+  var flag = [];
+  function addEmpInBookmark(obj) {
+    if (bookmarkArr.length > 0) {
+      flag = bookmarkArr.filter(function (ele) {
+        return ele.email == obj.email;
+      })
+    }
+    if (flag.length != 1) {
+      bookmarkArr.push(obj);
+      localStorage.setItem("bookmarks", JSON.stringify(bookmarkArr));
+    }
+  }
+  //  Sort Arr By Name
+  function sortFunByName() {
+    var sorBy = document.getElementById("sortByName").value;
+   
+    if (sorBy == "asc") {
+      applied.sort(function (a, b) {
+        if (a.name > b.name) return 1;
+        if (a.name < b.name) return -1;
+        return 0;
+      })
+      addEmpDataTable(applied)
+    }
+    if (sorBy == "dec") {
+      applied.sort(function (a, b) {
+        if (a.name < b.name) return 1;
+        if (a.name > b.name) return -1;
+        return 0;
+      })
+      addEmpDataTable(applied)
+    }
+
+  }
+  //  Sort Arr By Salary
+  function sortFunBySalary() {
+    var sorBy = document.getElementById("sortBySalary").value;
+
+    if (sorBy === "lToH") {
+      applied.sort(function (a, b) {
+        return a.salary - b.salary;
+      })
+    }
+    if (sorBy === "hToL") {
+      applied.sort(function (a, b) {
+        return b.salary - a.salary;
+      })
+    }
+    addEmpDataTable(applied)
+  }
+  //  Sort Arr By Role
+  function sortFunByRole() {
+    var sorBy = document.getElementById("sortByRole").value;
+    var sorted = applied.filter(function (ele) {
+      if (sorBy === "all") { return true }
+      else return ele.role === sorBy;
+    })
+    addEmpDataTable(sorted)
+  }
+</script>
+
+</html>
